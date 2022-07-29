@@ -1,3 +1,7 @@
+def getter(args):
+    pass
+
+
 class Account:
     def __init__(self, name, passport, phone_number, start_balance=0):
         self.name = name
@@ -8,31 +12,43 @@ class Account:
     # TODO: совместно с преподавателем реализуйте getter для просмотра баланса
     #  Можете попробовать самостоятельно: https://pythobyte.com/using-getters-and-setters-in-python-5205-840ed13f/
 
+    def balance(self):
+        return self.__balance
+
+    def zero_check(self,amount):
+        if amount <= 0:
+            raise ValueError(f'нельзя внести меньше нуля')
+
     def deposit(self, amount):
         """
         Внесение суммы на текущий счет
         :param amount: сумма
         """
-        pass
+        if not self.zero_check(amount):
+            self.__balance += amount
 
     def withdraw(self, amount):
         """
         Снятие суммы с текущего счета
         :param amount: сумма
         """
-        pass
+        if not self.zero_check(amount):
+            if amount > self.__balance:
+                raise ValueError(f'Сумма первышает доступный лимит на  {amount - self.__balance} руб')
+            else:
+                self.__balance -= amount
 
     def full_info(self):
         """
         Полная информация о счете в формате: "Иван баланс: 100 руб. паспорт: 3200 123456 т.+7-900-200-02-03"
         """
-        return f"..."
+        return f"{self.name}, баланс: {self.__balance} руб. паспорт: {self.passport} т.{self.phone_number}"
 
     def __repr__(self):
         """
         :return: Информацию о счете в виде строки в формате "Иван баланс: 100 руб."
         """
-        return f"..."
+        return f"{self.name}, баланс: {self.__balance} руб."
 
 
 # Создаем тестовый аккаунт:
@@ -45,6 +61,8 @@ print(account1)
 account1.deposit(600)
 print(account1)
 
+
+print("снимаем:")
 # Снимаем деньги со счета:
 try:
     account1.withdraw(1000)
@@ -58,3 +76,4 @@ try:
 except ValueError as e:
     print(e)
 print(account1)
+print(account1.balance())
